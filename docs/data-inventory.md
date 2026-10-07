@@ -46,6 +46,26 @@ or change whose progress it reads or writes.
 
 Not a behavior score or time-on-task measure. No "late," "behind," or comparison fields.
 
+## Reading preferences (planned, not yet collected)
+
+**Status: NOT YET COLLECTED.** Today these are dev-toolbar settings held in memory only and
+never stored. This entry records the plan (CLAUDE.md Section 11) so the fields are reviewed
+before any are added.
+
+| Field (planned) | Purpose (educational) | Retention (production, proposed) | Who can access (proposed) |
+|---|---|---|---|
+| `readingPreferences.dyslexiaFriendlyFont` (boolean) | Show text in OpenDyslexic, about 10% smaller | While enrolled; deleted with the account | The student; their teachers; school admin. Not parents' view of other children; never in analytics. |
+| `readingPreferences.readAloudIn35` (boolean) | Offer read-aloud buttons in grades 3–5 | While enrolled; deleted with the account | Same as above |
+
+Design rules for these fields:
+- Set by the teacher, stored with the student's account on the backend, never in browser
+  storage (school devices are shared).
+- Named and shown as general reading preferences any student can have, not as disability
+  accommodations, so the setting does not reveal a disability, IEP, or 504 plan. No link to
+  IEP/504 records is stored here.
+- Access restricted to the people listed above; staff access audit-logged like all student
+  data.
+
 ## Class-level data shown to students (not student data)
 
 | Data | Fields | Notes |

@@ -93,6 +93,22 @@ describe("DevShell toolbar", () => {
     expect(readButtons()).toHaveLength(0);
   });
 
+  test("the dyslexia-friendly font is off by default and the toolbar switch turns it on and off", async () => {
+    const { user, container } = renderDevApp();
+    await screen.findByText(en.today.greeting("Testy"));
+    const font = () => container.querySelector("[data-font]")?.getAttribute("data-font");
+
+    const toggle = within(toolbar()).getByRole("checkbox", { name: devStrings.dyslexiaFont });
+    expect(toggle).not.toBeChecked();
+    expect(font()).toBe("default");
+
+    await user.click(toggle);
+    expect(font()).toBe("dyslexic");
+
+    await user.click(toggle);
+    expect(font()).toBe("default");
+  });
+
   test("has no axe violations, open or closed", async () => {
     const { container, user } = renderDevApp();
     await screen.findByText(en.today.greeting("Testy"));

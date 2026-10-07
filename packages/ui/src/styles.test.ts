@@ -43,6 +43,29 @@ describe("shared stylesheets", () => {
     expect(Number(size?.[1])).toBeGreaterThanOrEqual(64);
   });
 
+  test("self-host both fonts from @fontsource (Atkinson Hyperlegible default, OpenDyslexic option)", () => {
+    expect(allCss).toMatch(/@import "@fontsource\/atkinson-hyperlegible\/latin-400\.css"/);
+    expect(allCss).toMatch(/@import "@fontsource\/opendyslexic\/latin-400\.css"/);
+    expect(allCss).toMatch(/@import "@fontsource\/opendyslexic\/latin-700\.css"/);
+  });
+
+  test("the dyslexia option switches the body font to OpenDyslexic", () => {
+    const block = allCss.match(/\[data-font="dyslexic"\]\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(block).toMatch(/--font-body:\s*"OpenDyslexic"/);
+  });
+
+  test("the dyslexia option shrinks text about 10% (OpenDyslexic runs wide), in every band", () => {
+    const dyslexic = allCss.match(/\[data-font="dyslexic"\]\s*\{([^}]*)\}/)?.[1] ?? "";
+    expect(dyslexic).toMatch(/--font-scale:\s*0\.9\b/);
+
+    // Every size token is computed on the app root, so the scale applies on top of K–2 sizes too.
+    const computed = allCss.match(/:root,\s*\.lf-app\s*\{([^}]*)\}/)?.[1] ?? "";
+    for (const size of ["base", "lg", "xl", "xxl"]) {
+      expect(computed).toMatch(new RegExp(`--font-size-${size}:\\s*calc\\(var\\(--font-size-${size}-unscaled\\)\\s*\\*\\s*var\\(--font-scale\\)\\)`));
+    }
+  });
+
   test("provide a visually-hidden utility that keeps text available to screen readers", () => {
     const block = allCss.match(/\.lf-visually-hidden\s*\{([^}]*)\}/)?.[1] ?? "";
 

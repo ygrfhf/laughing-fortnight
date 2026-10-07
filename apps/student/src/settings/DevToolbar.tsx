@@ -7,6 +7,8 @@ interface DevToolbarProps {
   onBandChange: (band: GradeBand | null) => void;
   readAloudIn35: boolean;
   onReadAloudIn35Change: (enabled: boolean) => void;
+  dyslexiaFont: boolean;
+  onDyslexiaFontChange: (enabled: boolean) => void;
   /** "HH:MM", or null for the real time. */
   time: string | null;
   onTimeChange: (time: string | null) => void;
@@ -18,6 +20,8 @@ export function DevToolbar({
   onBandChange,
   readAloudIn35,
   onReadAloudIn35Change,
+  dyslexiaFont,
+  onDyslexiaFontChange,
   time,
   onTimeChange,
 }: DevToolbarProps) {
@@ -46,14 +50,24 @@ export function DevToolbar({
             </label>
           ))}
         </fieldset>
-        <label>
-          <input
-            type="checkbox"
-            checked={readAloudIn35}
-            onChange={(event) => onReadAloudIn35Change(event.target.checked)}
-          />
-          {devStrings.readAloudIn35}
-        </label>
+        <div className="lf-actions">
+          <label>
+            <input
+              type="checkbox"
+              checked={readAloudIn35}
+              onChange={(event) => onReadAloudIn35Change(event.target.checked)}
+            />
+            {devStrings.readAloudIn35}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={dyslexiaFont}
+              onChange={(event) => onDyslexiaFontChange(event.target.checked)}
+            />
+            {devStrings.dyslexiaFont}
+          </label>
+        </div>
         <div className="lf-actions">
           <label>
             {devStrings.time}

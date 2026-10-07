@@ -5,6 +5,7 @@ import { AssignmentScreen } from "./screens/assignment/AssignmentScreen";
 import { BreakPrompt } from "./screens/BreakPrompt";
 import { FocusHeadingProvider } from "./screens/PageHeading";
 import { TodayScreen } from "./screens/today/TodayScreen";
+import { useDyslexiaFont } from "./settings/FontSetting";
 import { useGradeBand } from "./settings/GradeBandProvider";
 
 export function App() {
@@ -12,6 +13,7 @@ export function App() {
   useDataSource();
 
   const gradeBand = useGradeBand();
+  const dyslexiaFont = useDyslexiaFont();
   const route = useRoute();
   const routeKey = routeToHash(route);
 
@@ -30,7 +32,7 @@ export function App() {
   return (
     <FocusHeadingProvider value={hasNavigated}>
       {/* data-grade-band switches the K–2 / 3–5 design tokens for everything inside. */}
-      <div className="lf-app" data-grade-band={gradeBand}>
+      <div className="lf-app" data-grade-band={gradeBand} data-font={dyslexiaFont ? "dyslexic" : "default"}>
         {/* key: each route gets a fresh screen, so data reloads and headings remount. */}
         <main className="lf-page" key={routeKey}>
           <BreakPrompt lastBreakTime={lastBreakTime} onDismiss={setLastBreakTime} />

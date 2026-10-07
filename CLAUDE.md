@@ -380,6 +380,11 @@ Steps 1–3 make the teacher demo.
   For now it is off by default in 3–5 and can be turned on in the dev toolbar.
 - Break prompts: teachers need a way to pause them during direct instruction, and to tune
   frequency. Revisit after pilot.
+- Reading preferences (dyslexia-friendly font, read-aloud in 3–5) become per-student settings
+  set by the teacher and stored with the student's account on the backend, not in browser
+  storage. Frame them as general reading preferences any student can have, not disability
+  accommodations, so the setting doesn't reveal a student's disability. Restrict who can see
+  them.
 - Starting platform for the demo (ChromeOS web vs. iPad).
 - LLM vendor.
 - Which states to launch in first (drives which laws we map in detail).

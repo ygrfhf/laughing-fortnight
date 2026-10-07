@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
 import { App } from "./App";
 import { en } from "./strings/en";
 import { mockSource, renderWithProviders } from "./test-utils/render-with-providers";
@@ -31,6 +32,24 @@ describe("App shell", () => {
 
     await screen.findByText(en.today.greeting("Testy"));
     expect(container.querySelector("[data-grade-band]")).toHaveAttribute("data-grade-band", band);
+  });
+
+  test("uses the default font unless the dyslexia-friendly font is turned on", async () => {
+    const plain = renderWithProviders(<App />);
+    await screen.findByText(en.today.greeting("Testy"));
+    expect(plain.container.querySelector("[data-font]")).toHaveAttribute("data-font", "default");
+    plain.unmount();
+
+    const dyslexic = renderWithProviders(<App />, { dyslexiaFont: true });
+    await screen.findByText(en.today.greeting("Testy"));
+    expect(dyslexic.container.querySelector("[data-font]")).toHaveAttribute("data-font", "dyslexic");
+  });
+
+  test("has no axe violations with the dyslexia-friendly font", async () => {
+    const { container } = renderWithProviders(<App />, { dyslexiaFont: true });
+    await screen.findByText(en.today.greeting("Testy"));
+
+    await expectNoAxeViolations(container, { includeBestPractices: true });
   });
 
   test("fails loudly if rendered without a data source", () => {

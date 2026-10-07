@@ -10,6 +10,7 @@ export const devStrings = {
   bandK2: "K–2",
   bandG35: "3–5",
   readAloudIn35: "Read-aloud in 3–5",
+  dyslexiaFont: "Dyslexia-friendly font",
   time: "Pretend time",
   useRealTime: "Use real time",
 };

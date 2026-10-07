@@ -16,10 +16,12 @@
   --color-meter-empty: #6b7680; /* 4.64:1 on surface (UI part) */
 
   --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-size-base: 1.125rem;
-  --font-size-lg: 1.375rem;
-  --font-size-xl: 1.75rem;
-  --font-size-xxl: 2.25rem;
+  /* Sizes before the font scale (set per grade band); the scaled tokens are computed below. */
+  --font-size-base-unscaled: 1.125rem;
+  --font-size-lg-unscaled: 1.375rem;
+  --font-size-xl-unscaled: 1.75rem;
+  --font-size-xxl-unscaled: 2.25rem;
+  --font-scale: 1;
   --line-height: 1.5;
 
   --space-1: 0.25rem;
@@ -37,11 +39,33 @@
   --content-max: 42rem;
 }
 
+/*
+ * Size tokens = unscaled size x font scale. Computed again on .lf-app (which carries
+ * data-grade-band and data-font) so both the K–2 sizes and the dyslexia scale apply there.
+ */
+:root,
+.lf-app {
+  --font-size-base: calc(var(--font-size-base-unscaled) * var(--font-scale));
+  --font-size-lg: calc(var(--font-size-lg-unscaled) * var(--font-scale));
+  --font-size-xl: calc(var(--font-size-xl-unscaled) * var(--font-scale));
+  --font-size-xxl: calc(var(--font-size-xxl-unscaled) * var(--font-scale));
+}
+
+/*
+ * Dyslexia-friendly font option (self-hosted OpenDyslexic): about 10% smaller because the font
+ * runs wide and letter-spaced, with a little more line spacing.
+ */
+[data-font="dyslexic"] {
+  --font-body: "OpenDyslexic", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-scale: 0.9;
+  --line-height: 1.6;
+}
+
 /* K–2: bigger text and bigger touch targets for small hands (CLAUDE.md Section 5). */
 [data-grade-band="K-2"] {
   --touch-target-min: 64px;
-  --font-size-base: 1.375rem;
-  --font-size-lg: 1.625rem;
-  --font-size-xl: 2rem;
-  --font-size-xxl: 2.5rem;
+  --font-size-base-unscaled: 1.375rem;
+  --font-size-lg-unscaled: 1.625rem;
+  --font-size-xl-unscaled: 2rem;
+  --font-size-xxl-unscaled: 2.5rem;
 }

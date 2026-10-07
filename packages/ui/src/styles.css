@@ -5,6 +5,9 @@
  */
 @import "@fontsource/atkinson-hyperlegible/latin-400.css";
 @import "@fontsource/atkinson-hyperlegible/latin-700.css";
+/* Declared always, downloaded only when [data-font="dyslexic"] text actually uses it. */
+@import "@fontsource/opendyslexic/latin-400.css";
+@import "@fontsource/opendyslexic/latin-700.css";
 @import "./tokens.css";
 
 *,
@@ -39,9 +42,11 @@ p {
   outline-offset: var(--focus-ring-offset);
 }
 
-/* App root: carries data-grade-band, so its font size follows the band's tokens. */
+/* App root: carries data-grade-band and data-font, so its type follows those tokens. */
 .lf-app {
+  font-family: var(--font-body);
   font-size: var(--font-size-base);
+  line-height: var(--line-height);
 }
 
 /* K–2 is icon-first: picture cues next to text are larger. */

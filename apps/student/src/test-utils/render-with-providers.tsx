@@ -6,6 +6,7 @@ import type { StudentDataSource } from "../data/student-data-source";
 import type { GradeBand } from "../domain/grade-band";
 import { createMockDataSource, MOCK_STUDENT_IDS } from "../mock-data/mock-data-source";
 import { GradeBandProvider } from "../settings/GradeBandProvider";
+import { FontSettingProvider } from "../settings/FontSetting";
 import { ReadAloudSettingProvider } from "../settings/ReadAloudSetting";
 
 export const TEST_TODAY = "2026-10-06";
@@ -26,17 +27,21 @@ interface Options {
   band?: GradeBand;
   /** Turn on read-aloud in 3–5 (future teacher-set accommodation). Off by default. */
   readAloudIn35?: boolean;
+  /** Turn on the dyslexia-friendly font. Off by default. */
+  dyslexiaFont?: boolean;
 }
 
 export function renderWithProviders(
   ui: ReactElement,
-  { source = mockSource(), time = "09:30", band, readAloudIn35 = false }: Options = {},
+  { source = mockSource(), time = "09:30", band, readAloudIn35 = false, dyslexiaFont = false }: Options = {},
 ): RenderResult {
   return render(
     <DataSourceProvider source={source}>
       <ClockProvider now={() => at(time)}>
         <GradeBandProvider override={band ?? null}>
-          <ReadAloudSettingProvider enabledIn35={readAloudIn35}>{ui}</ReadAloudSettingProvider>
+          <ReadAloudSettingProvider enabledIn35={readAloudIn35}>
+            <FontSettingProvider dyslexiaFont={dyslexiaFont}>{ui}</FontSettingProvider>
+          </ReadAloudSettingProvider>
         </GradeBandProvider>
       </ClockProvider>
     </DataSourceProvider>,
