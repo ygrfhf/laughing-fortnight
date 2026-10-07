@@ -6,7 +6,7 @@ export function App() {
   useDataSource();
 
   return (
-    <main>
+    <main className="lf-page">
       <TodayScreen />
     </main>
   );

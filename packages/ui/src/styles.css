@@ -1,0 +1,147 @@
+/*
+ * Shared base styles. Fonts are self-hosted from @fontsource (bundled with the app, no CDN).
+ * Only the Latin 400 and 700 weights are loaded to keep downloads small on old devices.
+ * No animation libraries; no animations by default.
+ */
+@import "@fontsource/atkinson-hyperlegible/latin-400.css";
+@import "@fontsource/atkinson-hyperlegible/latin-700.css";
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Page: one calm column from phone width up; 16px side gutter, no sideways scrolling. */
+.lf-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-6) var(--page-gutter) var(--space-8);
+}
+
+.lf-page__title {
+  font-size: var(--font-size-xxl);
+  line-height: 1.2;
+}
+
+.lf-page__greeting {
+  font-size: var(--font-size-lg);
+}
+
+.lf-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.lf-card--primary {
+  background: var(--color-accent-soft);
+  border: 3px solid var(--color-accent);
+}
+
+.lf-card__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.lf-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--font-size-lg);
+  overflow-wrap: anywhere;
+}
+
+.lf-card--primary .lf-card__body {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lf-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.lf-text-muted {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+.lf-icon {
+  flex-shrink: 0;
+}
+
+.lf-meter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.lf-meter__dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-meter-empty);
+  border-radius: 50%;
+}
+
+.lf-meter__dot--done {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+@media (min-width: 48rem) {
+  .lf-page {
+    padding-top: var(--space-8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,3 +1,5 @@
 // Shared, accessible UI building blocks for the student, teacher, and parent apps.
-// Components land here from build step 3 onward.
-export {};
+// Styles: import "@laughing-fortnight/ui/styles.css" once at the app entry point.
+export { Card } from "./Card";
+export { Icon } from "./Icon";
+export { ProgressMeter } from "./ProgressMeter";

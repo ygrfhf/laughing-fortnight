@@ -4,6 +4,7 @@ import { TodayScreen } from "./TodayScreen";
 import { en } from "../../strings/en";
 import type { StudentDataSource } from "../../data/student-data-source";
 import { mockSource, renderWithProviders, TEST_TODAY } from "../../test-utils/render-with-providers";
+import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
 
 const K2_TODAY_TITLES = [
   "Story time: The Lost Mitten",
@@ -121,6 +122,70 @@ describe("TodayScreen", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent(en.common.loadError);
     expect(screen.queryByText(/offline/)).not.toBeInTheDocument();
+  });
+});
+
+describe("TodayScreen visuals", () => {
+  test("shows one progress dot per task due today, filled for finished work", async () => {
+    const { container } = renderWithProviders(<TodayScreen />, { source: await sourceWithDone(1) });
+
+    await region(en.today.progressHeading);
+    expect(container.querySelectorAll(".lf-meter__dot")).toHaveLength(4);
+    expect(container.querySelectorAll(".lf-meter__dot--done")).toHaveLength(1);
+  });
+
+  test("the next step is the visually emphasized card", async () => {
+    renderWithProviders(<TodayScreen />);
+
+    expect(await region(en.today.nextStepHeading)).toHaveClass("lf-card--primary");
+    expect(await region(en.today.rightNowHeading)).not.toHaveClass("lf-card--primary");
+  });
+
+  test("icons are decorative: text carries the meaning, so nothing extra is announced", async () => {
+    const { container } = renderWithProviders(<TodayScreen />, { time: "09:30" });
+
+    await region(en.today.rightNowHeading);
+    expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);
+    expect(screen.queryAllByRole("img")).toHaveLength(0);
+  });
+});
+
+describe("TodayScreen accessibility (axe)", () => {
+  test.each([
+    ["before school", "07:30", 0],
+    ["during Math", "09:30", 0],
+    ["during recess", "10:20", 0],
+    ["Math work finished, mid-class", "09:30", 1],
+    ["all done after school", "16:00", 4],
+  ])("has no violations %s", async (_label, time, doneCount) => {
+    const source = mockSource();
+    if (doneCount === 1) await source.markDone("asg-g1-math-count");
+    if (doneCount === 4) {
+      for (const a of await source.getAssignmentsDueOn(TEST_TODAY)) await source.markDone(a.id);
+    }
+    const { container } = renderWithProviders(
+      <main>
+        <TodayScreen />
+      </main>,
+      { source, time },
+    );
+
+    await region(en.today.nextStepHeading);
+    await expectNoAxeViolations(container, { includeBestPractices: true });
+  });
+
+  test("has no violations while loading or after a load error", async () => {
+    const loading = renderWithProviders(<main><TodayScreen /></main>, {
+      source: { ...mockSource(), getMe: () => new Promise<never>(() => {}) },
+    });
+    await expectNoAxeViolations(loading.container, { includeBestPractices: true });
+    loading.unmount();
+
+    const failed = renderWithProviders(<main><TodayScreen /></main>, {
+      source: { ...mockSource(), getMe: () => Promise.reject(new Error("offline")) },
+    });
+    await screen.findByRole("alert");
+    await expectNoAxeViolations(failed.container, { includeBestPractices: true });
   });
 });
 

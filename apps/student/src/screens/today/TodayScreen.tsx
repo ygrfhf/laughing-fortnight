@@ -15,7 +15,7 @@ export function TodayScreen() {
 
   return (
     <>
-      <h1>{strings.today.heading}</h1>
+      <h1 className="lf-page__title">{strings.today.heading}</h1>
       {state.status === "loading" && <p role="status">{strings.common.loading}</p>}
       {/* Fail closed: children see a friendly message, never raw error details. */}
       {state.status === "error" && <p role="alert">{strings.common.loadError}</p>}
@@ -35,7 +35,7 @@ function TodayContent({ data, time }: TodayContentProps) {
 
   return (
     <>
-      <p>{strings.today.greeting(student.firstName)}</p>
+      <p className="lf-page__greeting">{strings.today.greeting(student.firstName)}</p>
       <CurrentClassCard item={findCurrentItem(schedule, time)} classes={classes} />
       <NextStepCard step={selectNextStep({ schedule, assignments, progress, time })} classes={classes} />
       <ProgressCard summary={summarizeProgress(assignments, progress)} />

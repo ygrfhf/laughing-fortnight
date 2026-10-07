@@ -1,0 +1,38 @@
+/*
+ * Design tokens. Calm, warm, low-saturation palette for K–5.
+ * Contrast targets (WCAG 2.2 AA): text >= 4.5:1, large text and UI parts >= 3:1.
+ * Ratios below are calculated from these hex values and checked by tokens-contrast.test.ts,
+ * which fails if a pair drops below AA or a noted ratio no longer matches.
+ */
+:root {
+  --color-bg: #f6f4ef;
+  --color-surface: #ffffff;
+  --color-text: #1f2933; /* 13.42:1 on bg, 14.76:1 on surface, 12.71:1 on accent-soft */
+  --color-text-muted: #4a5560; /* 6.92:1 on bg, 7.61:1 on surface, 6.56:1 on accent-soft */
+  --color-accent: #1d5fa8; /* 5.87:1 on bg, 6.45:1 on surface, 5.56:1 on accent-soft */
+  --color-accent-soft: #e6effa;
+  --color-success: #2e7d4f; /* 5.05:1 on surface */
+  --color-border: #d4d8dd; /* decorative card edge only */
+  --color-meter-empty: #6b7680; /* 4.64:1 on surface (UI part) */
+
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size-base: 1.125rem;
+  --font-size-lg: 1.375rem;
+  --font-size-xl: 1.75rem;
+  --font-size-xxl: 2.25rem;
+  --line-height: 1.5;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 1rem;
+  --touch-target-min: 48px;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 3px;
+  --page-gutter: 16px;
+  --content-max: 42rem;
+}

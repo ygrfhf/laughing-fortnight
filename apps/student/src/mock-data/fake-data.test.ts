@@ -26,6 +26,9 @@ describe("mock data is obviously fake", () => {
     const names = Object.keys(rawSources);
 
     expect(names).toEqual(expect.arrayContaining(["./students.ts", "./classes.ts", "./assignments.ts", "./schedule.ts"]));
+    for (const [file, text] of Object.entries(rawSources)) {
+      expect(text.trim().length, `${file} was read as empty`).toBeGreaterThan(0);
+    }
   });
 
   test.each(Object.entries(rawSources))("%s has no real-looking emails", (_file, text) => {
