@@ -7,6 +7,11 @@ export function toIsoDate(date: Date): string {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
 }
 
+/** The local time of `date` as "HH:MM" (24-hour), matching ScheduleItem start/end. */
+export function toTimeOfDay(date: Date): string {
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
 /** Adds whole calendar days to a "YYYY-MM-DD" date. */
 export function addDays(isoDate: string, days: number): string {
   const match = ISO_DATE.exec(isoDate);

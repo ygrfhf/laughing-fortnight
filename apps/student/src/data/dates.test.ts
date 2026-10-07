@@ -1,5 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { addDays, toIsoDate } from "./dates";
+import { addDays, toIsoDate, toTimeOfDay } from "./dates";
+
+describe("toTimeOfDay", () => {
+  test("formats local time as zero-padded 24-hour HH:MM", () => {
+    expect(toTimeOfDay(new Date(2026, 9, 6, 9, 5))).toBe("09:05");
+    expect(toTimeOfDay(new Date(2026, 9, 6, 14, 30, 59))).toBe("14:30");
+  });
+});
 
 describe("toIsoDate", () => {
   test("formats the local calendar date with zero padding", () => {
