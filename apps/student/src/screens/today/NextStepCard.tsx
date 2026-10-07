@@ -6,6 +6,7 @@ import { routeToHash } from "../../router";
 import { useGradeBand } from "../../settings/GradeBandProvider";
 import { en as strings } from "../../strings/en";
 import { scheduleItemIcon, SUBJECT_ICONS } from "../icons";
+import { ReadAloud } from "../ReadAloud";
 
 interface NextStepCardProps {
   step: NextStep;
@@ -18,11 +19,18 @@ export function NextStepCard({ step, classes }: NextStepCardProps) {
   const className =
     step.kind === "assignment" ? classes.find((c) => c.id === step.assignment.classId)?.name : undefined;
 
+  const text = nextStepText(step, classes);
+
   return (
-    <Card heading={strings.today.nextStepHeading} icon={Footprints} emphasis="primary">
+    <Card
+      heading={strings.today.nextStepHeading}
+      icon={Footprints}
+      emphasis="primary"
+      action={<ReadAloud what={strings.today.nextStepHeading} parts={[strings.today.nextStepHeading, text]} />}
+    >
       <p className="lf-row">
         <Icon icon={nextStepIcon(step, classes)} size="1.5em" />
-        {nextStepText(step, classes)}
+        {text}
       </p>
       {/* 3–5 gets more detail; K–2 stays picture-and-title only. */}
       {band === "3-5" && step.kind === "assignment" && className && (

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
+import { installFakeSpeech, onDeviceVoice, removeSpeech } from "@laughing-fortnight/ui/test-utils/fake-speech";
 import { App } from "../App";
 import { DataSourceProvider } from "../data/DataSourceProvider";
 import { devStrings } from "../strings/dev-en";
@@ -11,6 +12,7 @@ import { DevShell } from "./DevShell";
 
 afterEach(() => {
   window.location.hash = "";
+  removeSpeech();
 });
 
 function renderDevApp() {
@@ -68,6 +70,24 @@ describe("DevShell toolbar", () => {
 
     await user.click(within(toolbar()).getByRole("button", { name: devStrings.useRealTime }));
     expect(await within(rightNow).findByText("Math")).toBeInTheDocument();
+  });
+
+  test("read-aloud in 3–5 is off by default and the toolbar switch turns it on and off", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    const { user } = renderDevApp();
+    await screen.findByText(en.today.greeting("Testy"));
+    const readButtons = () => screen.queryAllByRole("button", { name: new RegExp(`^${en.readAloud.label}`) });
+    await user.click(within(toolbar()).getByRole("radio", { name: devStrings.bandG35 }));
+
+    const toggle = within(toolbar()).getByRole("checkbox", { name: devStrings.readAloudIn35 });
+    expect(toggle).not.toBeChecked();
+    expect(readButtons()).toHaveLength(0);
+
+    await user.click(toggle);
+    expect(readButtons()).toHaveLength(3);
+
+    await user.click(toggle);
+    expect(readButtons()).toHaveLength(0);
   });
 
   test("has no axe violations, open or closed", async () => {

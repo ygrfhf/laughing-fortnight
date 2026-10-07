@@ -1,4 +1,5 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { installFakeSpeech, onDeviceVoice, removeSpeech } from "@laughing-fortnight/ui/test-utils/fake-speech";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
@@ -180,6 +181,64 @@ describe("AssignmentScreen", () => {
     renderAssignment(COUNT_ID, { ...mockSource(), getAssignment: () => Promise.reject(new Error("offline")) });
     expect(await screen.findByRole("alert")).toHaveTextContent(en.common.loadError);
     expect(screen.getByRole("link", { name: en.nav.backToToday })).toBeInTheDocument();
+  });
+});
+
+describe("AssignmentScreen read-aloud", () => {
+  afterEach(() => removeSpeech());
+
+  test("in K–2, the steps card reads the title and every numbered step", async () => {
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    const { user } = renderAssignment(COUNT_ID, mockSource(), "K-2");
+    const steps = await screen.findByRole("region", { name: en.assignment.stepsHeading });
+
+    await user.click(within(steps).getByRole("button", { name: en.readAloud.labelFor(en.assignment.stepsHeading) }));
+
+    expect(speech.spoken.map((u) => u.text).join(" ")).toBe(
+      [
+        "Count to 20.",
+        `${en.assignment.stepsHeading}.`,
+        `${en.readAloud.stepNumber(1)} Get your counting blocks.`,
+        `${en.readAloud.stepNumber(2)} Count them one by one.`,
+        `${en.readAloud.stepNumber(3)} Write the number you got.`,
+      ].join(" "),
+    );
+  });
+
+  test("in 3–5, there is no read-aloud button by default", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    renderAssignment(COUNT_ID, mockSource(), "3-5");
+    await screen.findByRole("region", { name: en.assignment.stepsHeading });
+
+    expect(screen.queryByRole("button", { name: new RegExp(`^${en.readAloud.label}`) })).not.toBeInTheDocument();
+  });
+
+  test("in 3–5 with the read-aloud setting on, the steps card can be read aloud", async () => {
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    const user = userEvent.setup();
+    renderWithProviders(
+      <main>
+        <AssignmentScreen assignmentId={COUNT_ID} />
+      </main>,
+      { band: "3-5", readAloudIn35: true },
+    );
+    const steps = await screen.findByRole("region", { name: en.assignment.stepsHeading });
+
+    await user.click(within(steps).getByRole("button", { name: en.readAloud.labelFor(en.assignment.stepsHeading) }));
+
+    expect(speech.spoken[0]?.text).toBe("Count to 20.");
+  });
+
+  test("reading stops when the student leaves the assignment", async () => {
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    const { user, unmount } = renderAssignment(COUNT_ID, mockSource(), "K-2");
+    const steps = await screen.findByRole("region", { name: en.assignment.stepsHeading });
+    await user.click(within(steps).getByRole("button"));
+    const before = speech.cancelCount();
+
+    unmount();
+
+    expect(speech.cancelCount()).toBe(before + 1);
   });
 });
 

@@ -34,6 +34,18 @@ describe("Card", () => {
     expect(screen.getByRole("region", { name: "Your next step" })).toHaveClass("lf-card--primary");
   });
 
+  test("shows an optional action beside the heading, outside the heading itself", () => {
+    render(
+      <Card heading="Your next step" action={<button type="button">Read to me</button>}>
+        Count to 20
+      </Card>,
+    );
+
+    const heading = screen.getByRole("heading", { level: 2, name: "Your next step" });
+    expect(within(heading).queryByRole("button")).not.toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Your next step" })).getByRole("button")).toBeInTheDocument();
+  });
+
   test("has no axe violations", async () => {
     const { container } = render(
       <Card heading="Your next step" icon={BookOpen} emphasis="primary">

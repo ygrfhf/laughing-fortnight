@@ -101,7 +101,7 @@ function AssignmentDetails({ assignment, classInfo, alreadyDone }: AssignmentDet
           {strings.assignment.aboutMinutes(assignment.estimatedMinutes)}
         </p>
       )}
-      <InstructionSteps steps={assignment.steps} />
+      <InstructionSteps title={assignment.title} steps={assignment.steps} />
       {done ? (
         <DoneMessage moveFocus={focusAfterSave === "confirmation"} onUndo={() => save(false)} saving={saving} />
       ) : (

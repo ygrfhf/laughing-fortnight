@@ -376,6 +376,8 @@ Steps 1–3 make the teacher demo.
 - Starting grade band for the pilot (the demo defaults to K–2; see above).
 - Home mode: show only teacher-marked homework after school, rather than all unfinished
   classwork. Needs a teacher setting.
+- Read-aloud in 3–5 becomes a teacher-set per-student accommodation (IEP/504 support).
+  For now it is off by default in 3–5 and can be turned on in the dev toolbar.
 - Starting platform for the demo (ChromeOS web vs. iPad).
 - LLM vendor.
 - Which states to launch in first (drives which laws we map in detail).

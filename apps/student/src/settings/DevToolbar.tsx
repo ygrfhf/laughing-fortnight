@@ -5,13 +5,22 @@ import { devStrings } from "../strings/dev-en";
 interface DevToolbarProps {
   band: GradeBand | null;
   onBandChange: (band: GradeBand | null) => void;
+  readAloudIn35: boolean;
+  onReadAloudIn35Change: (enabled: boolean) => void;
   /** "HH:MM", or null for the real time. */
   time: string | null;
   onTimeChange: (time: string | null) => void;
 }
 
 /** Developer-only controls. Rendered by DevShell, which only exists in dev builds. */
-export function DevToolbar({ band, onBandChange, time, onTimeChange }: DevToolbarProps) {
+export function DevToolbar({
+  band,
+  onBandChange,
+  readAloudIn35,
+  onReadAloudIn35Change,
+  time,
+  onTimeChange,
+}: DevToolbarProps) {
   // Built inside the component (not at module level) so production builds can drop this module.
   const bandOptions: ReadonlyArray<{ value: GradeBand | null; label: string }> = [
     { value: null, label: devStrings.auto },
@@ -37,6 +46,14 @@ export function DevToolbar({ band, onBandChange, time, onTimeChange }: DevToolba
             </label>
           ))}
         </fieldset>
+        <label>
+          <input
+            type="checkbox"
+            checked={readAloudIn35}
+            onChange={(event) => onReadAloudIn35Change(event.target.checked)}
+          />
+          {devStrings.readAloudIn35}
+        </label>
         <div className="lf-actions">
           <label>
             {devStrings.time}

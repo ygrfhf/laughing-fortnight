@@ -3,6 +3,7 @@ import { ClockProvider } from "../clock/ClockProvider";
 import type { GradeBand } from "../domain/grade-band";
 import { DevToolbar } from "./DevToolbar";
 import { GradeBandProvider } from "./GradeBandProvider";
+import { ReadAloudSettingProvider } from "./ReadAloudSetting";
 
 const systemNow = (): Date => new Date();
 
@@ -23,14 +24,24 @@ interface DevShellProps {
  */
 export function DevShell({ now = systemNow, children }: DevShellProps) {
   const [bandOverride, setBandOverride] = useState<GradeBand | null>(null);
+  const [readAloudIn35, setReadAloudIn35] = useState(false);
   const [timeOverride, setTimeOverride] = useState<string | null>(null);
   const clock = useMemo(() => (timeOverride ? () => atTime(now(), timeOverride) : now), [now, timeOverride]);
 
   return (
     <>
-      <DevToolbar band={bandOverride} onBandChange={setBandOverride} time={timeOverride} onTimeChange={setTimeOverride} />
+      <DevToolbar
+        band={bandOverride}
+        onBandChange={setBandOverride}
+        readAloudIn35={readAloudIn35}
+        onReadAloudIn35Change={setReadAloudIn35}
+        time={timeOverride}
+        onTimeChange={setTimeOverride}
+      />
       <ClockProvider now={clock}>
-        <GradeBandProvider override={bandOverride}>{children}</GradeBandProvider>
+        <GradeBandProvider override={bandOverride}>
+          <ReadAloudSettingProvider enabledIn35={readAloudIn35}>{children}</ReadAloudSettingProvider>
+        </GradeBandProvider>
       </ClockProvider>
     </>
   );

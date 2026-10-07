@@ -5,7 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./styles.css": "./src/styles.css",
-    "./test-utils/axe": "./src/test-utils/axe.ts"
+    "./test-utils/axe": "./src/test-utils/axe.ts",
+    "./test-utils/fake-speech": "./src/test-utils/fake-speech.ts"
   },
   "peerDependencies": {
     "react": "^19.3.0"

@@ -1,5 +1,7 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import { screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { cloudVoice, installFakeSpeech, onDeviceVoice, removeSpeech } from "@laughing-fortnight/ui/test-utils/fake-speech";
 import { TodayScreen } from "./TodayScreen";
 import { en } from "../../strings/en";
 import type { StudentDataSource } from "../../data/student-data-source";
@@ -168,6 +170,103 @@ describe("TodayScreen grade bands", () => {
     );
 
     await region(en.today.nextStepHeading);
+    await expectNoAxeViolations(container, { includeBestPractices: true });
+  });
+});
+
+describe("TodayScreen read-aloud (tap-only, on-device voices only)", () => {
+  afterEach(() => removeSpeech());
+
+  const readButtons = () => screen.queryAllByRole("button", { name: new RegExp(`^${en.readAloud.label}`) });
+
+  test("K–2 offers a read-aloud button on each card when an on-device voice exists", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "K-2" });
+    await region(en.today.nextStepHeading);
+
+    expect(readButtons().map((b) => b.getAttribute("aria-label"))).toEqual([
+      en.readAloud.labelFor(en.today.rightNowHeading),
+      en.readAloud.labelFor(en.today.nextStepHeading),
+      en.readAloud.labelFor(en.today.progressHeading),
+    ]);
+  });
+
+  test("tapping reads that card's heading and content with the on-device voice", async () => {
+    const user = userEvent.setup();
+    const device = onDeviceVoice("en-US", "Device English");
+    const speech = installFakeSpeech([cloudVoice(), device]);
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "K-2" });
+    const nextStep = await region(en.today.nextStepHeading);
+
+    await user.click(within(nextStep).getByRole("button", { name: en.readAloud.labelFor(en.today.nextStepHeading) }));
+
+    expect(speech.spoken.map((u) => u.text)).toEqual([`${en.today.nextStepHeading}.`, "Count to 20."]);
+    expect(speech.spoken.every((u) => u.voice === device)).toBe(true);
+  });
+
+  test("the Right now card reads the class and the teacher", async () => {
+    const user = userEvent.setup();
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { time: "12:45", band: "K-2" });
+    const rightNow = await region(en.today.rightNowHeading);
+
+    await user.click(within(rightNow).getByRole("button"));
+
+    expect(speech.spoken.map((u) => u.text).join(" ")).toBe(
+      `${en.today.rightNowHeading}. Art. ${en.today.withTeacher("Mr. Placeholder")}.`,
+    );
+  });
+
+  test("nothing is read until the student taps", async () => {
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { band: "K-2" });
+    await region(en.today.nextStepHeading);
+
+    expect(speech.spoken).toHaveLength(0);
+  });
+
+  test("no read-aloud buttons when only cloud voices exist", async () => {
+    installFakeSpeech([cloudVoice()]);
+    renderWithProviders(<TodayScreen />, { band: "K-2" });
+    await region(en.today.nextStepHeading);
+
+    expect(readButtons()).toHaveLength(0);
+  });
+
+  test("3–5 mode has no read-aloud buttons by default", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { band: "3-5" });
+    await region(en.today.nextStepHeading);
+
+    expect(readButtons()).toHaveLength(0);
+  });
+
+  test("3–5 mode gets every read-aloud button when the setting is on", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { band: "3-5", readAloudIn35: true });
+    await region(en.today.nextStepHeading);
+
+    expect(readButtons()).toHaveLength(3);
+  });
+
+  test("the 3–5 setting still never uses a cloud voice", async () => {
+    installFakeSpeech([cloudVoice()]);
+    renderWithProviders(<TodayScreen />, { band: "3-5", readAloudIn35: true });
+    await region(en.today.nextStepHeading);
+
+    expect(readButtons()).toHaveLength(0);
+  });
+
+  test("has no axe violations with read-aloud buttons showing", async () => {
+    installFakeSpeech([onDeviceVoice()]);
+    const { container } = renderWithProviders(
+      <main>
+        <TodayScreen />
+      </main>,
+      { time: "09:30", band: "K-2" },
+    );
+    await region(en.today.nextStepHeading);
+
     await expectNoAxeViolations(container, { includeBestPractices: true });
   });
 });

@@ -15,6 +15,13 @@ export const en = {
     loading: "Loading…",
     loadError: "Something went wrong. Let's ask your teacher!",
   },
+  readAloud: {
+    label: "Read to me",
+    stop: "Stop reading",
+    /** Accessible name; must begin with `label` (WCAG 2.5.3). */
+    labelFor: (what: string): string => `Read to me: ${what}`,
+    stepNumber: (n: number): string => `Step ${n}.`,
+  },
   nav: {
     backToToday: "Back to Today",
     seeWhatsNext: "See what's next",

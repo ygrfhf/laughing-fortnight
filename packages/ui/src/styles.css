@@ -84,6 +84,14 @@ p {
   border: 3px solid var(--color-accent);
 }
 
+.lf-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
 .lf-card__heading {
   display: flex;
   align-items: center;

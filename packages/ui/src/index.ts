@@ -4,3 +4,5 @@ export { Button, ButtonLink } from "./Button";
 export { Card } from "./Card";
 export { Icon } from "./Icon";
 export { ProgressMeter } from "./ProgressMeter";
+export { ReadAloudButton } from "./ReadAloudButton";
+export { joinForSpeech } from "./speech";

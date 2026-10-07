@@ -9,6 +9,7 @@ export const devStrings = {
   auto: "Auto (student's grade)",
   bandK2: "K–2",
   bandG35: "3–5",
+  readAloudIn35: "Read-aloud in 3–5",
   time: "Pretend time",
   useRealTime: "Use real time",
 };

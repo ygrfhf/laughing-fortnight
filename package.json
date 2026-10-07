@@ -14,9 +14,12 @@
     "typecheck": "tsc -p apps/student && tsc -p packages/ui",
     "test": "npm run test:guard && npm run test:unit",
     "test:guard": "node --test \"apps/**/test/**/*.test.ts\"",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.4",
     "axe-core": "^4.14.0",
     "jsdom": "^29.1.1",

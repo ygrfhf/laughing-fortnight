@@ -61,9 +61,11 @@ Not a behavior score or time-on-task measure. No "late," "behind," or comparison
 | (none) | | |
 
 Currently nothing leaves the device: there is no backend, analytics, or third-party service.
-Read-aloud (arriving in build step 6) uses on-device speech synthesis voices only; if no
-on-device voice is available the read-aloud button is hidden, so text is never sent to a
-cloud speech service.
+Read-aloud (K–2, tap-only) uses on-device speech synthesis voices only (`localService ===
+true`, matching the page language), and always sets that voice explicitly instead of the
+browser default. If no on-device voice is available the read-aloud button is hidden, so text
+is never sent to a cloud speech service. It never uses the microphone and records nothing.
+Covered by unit tests and the Playwright spec `apps/student/e2e/read-aloud.spec.ts`.
 
 ## Device-local data
 
