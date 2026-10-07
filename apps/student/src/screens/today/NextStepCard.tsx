@@ -3,6 +3,7 @@ import { Footprints, Hand, PartyPopper, type LucideIcon } from "lucide-react";
 import type { ClassInfo } from "../../data/types";
 import type { NextStep } from "../../domain/next-step";
 import { routeToHash } from "../../router";
+import { useGradeBand } from "../../settings/GradeBandProvider";
 import { en as strings } from "../../strings/en";
 import { scheduleItemIcon, SUBJECT_ICONS } from "../icons";
 
@@ -13,12 +14,20 @@ interface NextStepCardProps {
 
 /** Shows ONE next step, with a Start link when that step is an assignment. */
 export function NextStepCard({ step, classes }: NextStepCardProps) {
+  const band = useGradeBand();
+  const className =
+    step.kind === "assignment" ? classes.find((c) => c.id === step.assignment.classId)?.name : undefined;
+
   return (
     <Card heading={strings.today.nextStepHeading} icon={Footprints} emphasis="primary">
       <p className="lf-row">
         <Icon icon={nextStepIcon(step, classes)} size="1.5em" />
         {nextStepText(step, classes)}
       </p>
+      {/* 3–5 gets more detail; K–2 stays picture-and-title only. */}
+      {band === "3-5" && step.kind === "assignment" && className && (
+        <p className="lf-text-muted">{strings.today.stepDetails(className, step.assignment.estimatedMinutes)}</p>
+      )}
       {step.kind === "assignment" && (
         <div className="lf-actions">
           <ButtonLink

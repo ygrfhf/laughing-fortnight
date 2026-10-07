@@ -36,6 +36,8 @@ export const en = {
     noClassNow: "No class right now",
     withTeacher: (teacherName: string): string => `with ${teacherName}`,
     nextStepHeading: "Your next step",
+    /** 3–5 only: extra detail under the next step's title. */
+    stepDetails: (className: string, minutes: number): string => `${className}, about ${minutes} minutes`,
     start: "Start",
     /** Accessible name for the Start link; must begin with `start` (WCAG 2.5.3). */
     startLabel: (title: string): string => `Start ${title}`,
@@ -54,3 +56,5 @@ export const en = {
 };
 
 export type Strings = typeof en;
+
+// Developer toolbar wording lives in ./dev-en.ts so production builds drop it.

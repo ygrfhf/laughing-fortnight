@@ -36,3 +36,12 @@
   --page-gutter: 16px;
   --content-max: 42rem;
 }
+
+/* K–2: bigger text and bigger touch targets for small hands (CLAUDE.md Section 5). */
+[data-grade-band="K-2"] {
+  --touch-target-min: 64px;
+  --font-size-base: 1.375rem;
+  --font-size-lg: 1.625rem;
+  --font-size-xl: 2rem;
+  --font-size-xxl: 2.5rem;
+}

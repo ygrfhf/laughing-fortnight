@@ -36,6 +36,13 @@ describe("shared stylesheets", () => {
     expect(allCss).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   });
 
+  test("K–2 mode raises the touch target size to at least 64px", () => {
+    const k2Block = allCss.match(/\[data-grade-band="K-2"\]\s*\{([^}]*)\}/);
+    const size = k2Block?.[1]?.match(/--touch-target-min:\s*(\d+)px/);
+
+    expect(Number(size?.[1])).toBeGreaterThanOrEqual(64);
+  });
+
   test("define a minimum touch target size token of at least 48px", () => {
     const match = allCss.match(/--touch-target-min:\s*(\d+)px/);
     expect(Number(match?.[1])).toBeGreaterThanOrEqual(48);

@@ -5,6 +5,7 @@ import { en } from "../../strings/en";
 import type { StudentDataSource } from "../../data/student-data-source";
 import { mockSource, renderWithProviders, TEST_TODAY } from "../../test-utils/render-with-providers";
 import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
+import { MOCK_STUDENT_IDS } from "../../mock-data/mock-data-source";
 
 const K2_TODAY_TITLES = [
   "Story time: The Lost Mitten",
@@ -32,12 +33,11 @@ describe("TodayScreen", () => {
     expect(await screen.findByText(en.today.greeting("Testy"))).toBeInTheDocument();
   });
 
-  test("during Math, shows the current class with its teacher and that class's work as the next step", async () => {
+  test("during Math, shows the current class and that class's work as the next step", async () => {
     renderWithProviders(<TodayScreen />, { time: "09:30" });
 
     const rightNow = await region(en.today.rightNowHeading);
     expect(within(rightNow).getByText("Math")).toBeInTheDocument();
-    expect(within(rightNow).getByText(en.today.withTeacher("Ms. Sample"))).toBeInTheDocument();
 
     const nextStep = await region(en.today.nextStepHeading);
     expect(within(nextStep).getByText("Count to 20")).toBeInTheDocument();
@@ -122,6 +122,53 @@ describe("TodayScreen", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent(en.common.loadError);
     expect(screen.queryByText(/offline/)).not.toBeInTheDocument();
+  });
+});
+
+describe("TodayScreen grade bands", () => {
+  test("K–2 shows the teacher (specialists change through the day) but no time estimate", async () => {
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "K-2" });
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText(en.today.withTeacher("Ms. Sample"))).toBeInTheDocument();
+    const nextStep = await region(en.today.nextStepHeading);
+    expect(within(nextStep).queryByText(en.today.stepDetails("Math", 10))).not.toBeInTheDocument();
+  });
+
+  test("K–2 names the specialist teacher during a specials class", async () => {
+    renderWithProviders(<TodayScreen />, { time: "12:45", band: "K-2" }); // Art
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText("Art")).toBeInTheDocument();
+    expect(within(rightNow).getByText(en.today.withTeacher("Mr. Placeholder"))).toBeInTheDocument();
+  });
+
+  test("3–5 adds detail: the teacher, and the class and time estimate for the next step", async () => {
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "3-5" });
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText(en.today.withTeacher("Ms. Sample"))).toBeInTheDocument();
+    const nextStep = await region(en.today.nextStepHeading);
+    expect(within(nextStep).getByText(en.today.stepDetails("Math", 10))).toBeInTheDocument();
+  });
+
+  test("a grade 4 student gets the 3–5 experience automatically", async () => {
+    renderWithProviders(<TodayScreen />, { source: mockSource(MOCK_STUDENT_IDS.g35), time: "08:30" });
+
+    const nextStep = await region(en.today.nextStepHeading);
+    expect(await within(nextStep).findByText(en.today.stepDetails("Math", 20))).toBeInTheDocument();
+  });
+
+  test.each(["K-2", "3-5"] as const)("has no axe violations in %s mode", async (band) => {
+    const { container } = renderWithProviders(
+      <main>
+        <TodayScreen />
+      </main>,
+      { time: "09:30", band },
+    );
+
+    await region(en.today.nextStepHeading);
+    await expectNoAxeViolations(container, { includeBestPractices: true });
   });
 });
 

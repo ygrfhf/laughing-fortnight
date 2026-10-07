@@ -5,25 +5,26 @@ import { expectNoAxeViolations } from "@laughing-fortnight/ui/test-utils/axe";
 import { AssignmentScreen } from "./AssignmentScreen";
 import { en } from "../../strings/en";
 import type { AssignmentProgress } from "../../data/types";
+import type { GradeBand } from "../../domain/grade-band";
 import { mockSource, renderWithProviders, TEST_TODAY } from "../../test-utils/render-with-providers";
 import { MOCK_STUDENT_IDS } from "../../mock-data/mock-data-source";
 
 const COUNT_ID = "asg-g1-math-count";
 
-function renderAssignment(assignmentId = COUNT_ID, source = mockSource()) {
+function renderAssignment(assignmentId = COUNT_ID, source = mockSource(), band?: GradeBand) {
   const user = userEvent.setup();
   const view = renderWithProviders(
     <main>
       <AssignmentScreen assignmentId={assignmentId} />
     </main>,
-    { source },
+    { source, band },
   );
   return { user, source, ...view };
 }
 
 describe("AssignmentScreen", () => {
-  test("shows the title, class, time estimate, and the steps in order", async () => {
-    renderAssignment();
+  test("in 3–5 mode, shows the title, class, time estimate, and the steps in order", async () => {
+    renderAssignment(COUNT_ID, mockSource(), "3-5");
 
     expect(await screen.findByRole("heading", { level: 1, name: "Count to 20" })).toBeInTheDocument();
     expect(screen.getByText("Math")).toBeInTheDocument();
@@ -35,6 +36,15 @@ describe("AssignmentScreen", () => {
       "Count them one by one.",
       "Write the number you got.",
     ]);
+  });
+
+  test("in K–2 mode, leaves out the time estimate but keeps the class and steps", async () => {
+    renderAssignment(COUNT_ID, mockSource(), "K-2");
+
+    await screen.findByRole("heading", { level: 1, name: "Count to 20" });
+    expect(screen.getByText("Math")).toBeInTheDocument();
+    expect(screen.queryByText(en.assignment.aboutMinutes(10))).not.toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: en.assignment.stepsHeading })).getAllByRole("listitem")).toHaveLength(3);
   });
 
   test("step picture cues are decorative; the text carries the meaning", async () => {

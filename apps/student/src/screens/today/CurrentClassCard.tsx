@@ -11,6 +11,7 @@ interface CurrentClassCardProps {
 }
 
 export function CurrentClassCard({ item, classes }: CurrentClassCardProps) {
+  // Both bands show the teacher: young kids see different specialist teachers during the day.
   const classInfo = item?.kind === "class" ? classes.find((c) => c.id === item.classId) : undefined;
 
   return (

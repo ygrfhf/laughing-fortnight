@@ -4,11 +4,13 @@ import { routeToHash, useRoute } from "./router";
 import { AssignmentScreen } from "./screens/assignment/AssignmentScreen";
 import { FocusHeadingProvider } from "./screens/PageHeading";
 import { TodayScreen } from "./screens/today/TodayScreen";
+import { useGradeBand } from "./settings/GradeBandProvider";
 
 export function App() {
   // Fail loudly at startup if the app is wired without a data source.
   useDataSource();
 
+  const gradeBand = useGradeBand();
   const route = useRoute();
   const routeKey = routeToHash(route);
 
@@ -23,10 +25,13 @@ export function App() {
 
   return (
     <FocusHeadingProvider value={hasNavigated}>
-      {/* key: each route gets a fresh screen, so data reloads and headings remount. */}
-      <main className="lf-page" key={routeKey}>
-        {route.name === "assignment" ? <AssignmentScreen assignmentId={route.assignmentId} /> : <TodayScreen />}
-      </main>
+      {/* data-grade-band switches the K–2 / 3–5 design tokens for everything inside. */}
+      <div className="lf-app" data-grade-band={gradeBand}>
+        {/* key: each route gets a fresh screen, so data reloads and headings remount. */}
+        <main className="lf-page" key={routeKey}>
+          {route.name === "assignment" ? <AssignmentScreen assignmentId={route.assignmentId} /> : <TodayScreen />}
+        </main>
+      </div>
     </FocusHeadingProvider>
   );
 }

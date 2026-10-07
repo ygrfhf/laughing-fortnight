@@ -6,6 +6,8 @@ import { ClockProvider } from "./clock/ClockProvider";
 import { DataSourceProvider } from "./data/DataSourceProvider";
 import { toIsoDate } from "./data/dates";
 import { createMockDataSource, MOCK_STUDENT_IDS } from "./mock-data/mock-data-source";
+import { DevShell } from "./settings/DevShell";
+import { GradeBandProvider } from "./settings/GradeBandProvider";
 import { en as strings } from "./strings/en";
 
 // Mock data only until real login and the backend exist (CLAUDE.md build step 4).
@@ -22,12 +24,22 @@ if (!rootElement) {
 
 document.title = strings.app.title;
 
+// import.meta.env.DEV is replaced at build time, so the dev toolbar is removed from
+// production builds entirely (checked by grepping the build output).
+const app = import.meta.env.DEV ? (
+  <DevShell>
+    <App />
+  </DevShell>
+) : (
+  <ClockProvider>
+    <GradeBandProvider override={null}>
+      <App />
+    </GradeBandProvider>
+  </ClockProvider>
+);
+
 createRoot(rootElement).render(
   <StrictMode>
-    <DataSourceProvider source={dataSource}>
-      <ClockProvider>
-        <App />
-      </ClockProvider>
-    </DataSourceProvider>
+    <DataSourceProvider source={dataSource}>{app}</DataSourceProvider>
   </StrictMode>,
 );

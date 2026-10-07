@@ -4,6 +4,7 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { useDataSource } from "../../data/DataSourceProvider";
 import type { Assignment, ClassInfo } from "../../data/types";
 import { routeToHash } from "../../router";
+import { useGradeBand } from "../../settings/GradeBandProvider";
 import { en as strings } from "../../strings/en";
 import { SUBJECT_ICONS } from "../icons";
 import { PageHeading } from "../PageHeading";
@@ -53,6 +54,8 @@ interface AssignmentDetailsProps {
 
 function AssignmentDetails({ assignment, classInfo, alreadyDone }: AssignmentDetailsProps) {
   const source = useDataSource();
+  // Time estimates are abstract for K–2, so only 3–5 sees them.
+  const band = useGradeBand();
   const [done, setDone] = useState(alreadyDone);
   const [saving, setSaving] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -92,10 +95,12 @@ function AssignmentDetails({ assignment, classInfo, alreadyDone }: AssignmentDet
           {classInfo.name}
         </p>
       )}
-      <p className="lf-row lf-text-muted">
-        <Icon icon={Clock} />
-        {strings.assignment.aboutMinutes(assignment.estimatedMinutes)}
-      </p>
+      {band === "3-5" && (
+        <p className="lf-row lf-text-muted">
+          <Icon icon={Clock} />
+          {strings.assignment.aboutMinutes(assignment.estimatedMinutes)}
+        </p>
+      )}
       <InstructionSteps steps={assignment.steps} />
       {done ? (
         <DoneMessage moveFocus={focusAfterSave === "confirmation"} onUndo={() => save(false)} saving={saving} />

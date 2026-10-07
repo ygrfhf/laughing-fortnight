@@ -26,6 +26,13 @@ describe("App shell", () => {
     expect(await screen.findByText(en.today.greeting("Testy"))).toBeInTheDocument();
   });
 
+  test.each(["K-2", "3-5"] as const)("marks the app with the %s grade band so styles can adapt", async (band) => {
+    const { container } = renderWithProviders(<App />, { band });
+
+    await screen.findByText(en.today.greeting("Testy"));
+    expect(container.querySelector("[data-grade-band]")).toHaveAttribute("data-grade-band", band);
+  });
+
   test("fails loudly if rendered without a data source", () => {
     expect(() => render(<App />)).toThrow(/DataSourceProvider/);
   });
