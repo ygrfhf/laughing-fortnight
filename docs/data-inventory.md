@@ -91,7 +91,11 @@ Covered by unit tests and the Playwright spec `apps/student/e2e/read-aloud.spec.
 
 | Data | Where | Purpose | Retention |
 |---|---|---|---|
-| (none yet) | | | |
+| App shell: code, styles, the default font, icons, `index.html` (no student data) | Service worker cache (Cache Storage), production builds only | Open and work offline | Replaced on each app update; old caches cleaned up automatically |
+| OpenDyslexic font files (no student data) | Service worker runtime cache `lf-optional-fonts`, only after the font is first used | Keep the optional font available offline | At most 4 files; replaced on update |
 
-Planned (later steps): UI preferences such as the dyslexia-friendly font will be decided per
-CLAUDE.md before any browser storage is used, because school devices are shared.
+No student data is stored on the device: no `localStorage`, `sessionStorage`, IndexedDB, or
+cookies, and the service worker caches only the app's own files. When the real backend
+arrives, any offline copy of student data (CLAUDE.md step 7, offline sync) needs its own
+design for shared devices (separate per-student storage, cleared at logout) before it is
+built. Reading preferences stay on the backend (see "Reading preferences" above).

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Placeholder app icon (product name not decided yet): an open book on the accent blue. -->
+  <rect width="512" height="512" rx="96" fill="#1d5fa8"/>
+  <path d="M256 168c-36-26-84-36-140-32v220c56-4 104 6 140 32 36-26 84-36 140-32V136c-56-4-104 6-140 32z"
+        fill="#ffffff"/>
+  <path d="M256 168v220" stroke="#1d5fa8" stroke-width="14" stroke-linecap="round"/>
+</svg>

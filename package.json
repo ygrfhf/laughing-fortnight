@@ -16,7 +16,8 @@
     "test:guard": "node --test \"apps/**/test/**/*.test.ts\"",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "test:all": "npm test && npm run test:e2e"
+    "test:all": "npm test && npm run check:build && npm run test:e2e",
+    "check:build": "npm run build && node scripts/check-build.mts"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
