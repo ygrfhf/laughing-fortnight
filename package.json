@@ -1,0 +1,10 @@
+{
+  "name": "laughing-fortnight",
+  "private": true,
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "test": "node --test \"apps/**/test/**/*.test.ts\""
+  }
+}
