@@ -4,7 +4,22 @@
   "engines": {
     "node": ">=23.6"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "test": "node --test \"apps/**/test/**/*.test.ts\""
+    "dev": "npm run dev -w @laughing-fortnight/student",
+    "build": "npm run build -w @laughing-fortnight/student",
+    "typecheck": "tsc -p apps/student && tsc -p packages/ui",
+    "test": "npm run test:guard && npm run test:unit",
+    "test:guard": "node --test \"apps/**/test/**/*.test.ts\"",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "jsdom": "^29.1.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
   }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "@laughing-fortnight/ui",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0"
+  }
+}

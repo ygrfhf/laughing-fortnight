@@ -1,7 +1,8 @@
 /**
  * Build-time guard for the student client (CLAUDE.md Section 2, .claude/rules/child-safety.md).
  *
- * Scans apps/student source and fails if it finds:
+ * Scans every client folder in the hook's CONFIG.clientDirs that exists (apps/student,
+ * packages/ui, and later apps/teacher, apps/parent) and fails if it finds:
  *   - direct LLM provider calls (all AI goes through the backend AI gateway)
  *   - secrets / API keys
  *   - analytics, ad, or tracking SDKs
@@ -16,7 +17,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,6 +31,7 @@ interface GuardRules {
 }
 
 interface GuardConfig {
+  clientDirs: string[];
   voiceInputDir: string;
 }
 
@@ -150,13 +152,26 @@ test("scanner allows the backend gateway endpoint", () => {
 
 // --- The actual guard. ---
 
-test("student client source has no direct LLM calls, secrets, trackers, biometrics, camera, or stray mic access", () => {
-  const files = listSourceFiles(STUDENT_DIR).filter((f) => f !== THIS_FILE);
+const existingClientDirs = CONFIG.clientDirs.filter((d) => existsSync(join(REPO_ROOT, d)));
+
+test("guard covers the student app and the shared UI package", () => {
+  for (const required of ["apps/student", "packages/ui"]) {
+    assert.ok(
+      existingClientDirs.includes(required),
+      `${required} must exist and be listed in CONFIG.clientDirs in child-safety-guard.js`,
+    );
+  }
+});
+
+test("client source has no direct LLM calls, secrets, trackers, biometrics, camera, or stray mic access", () => {
+  const files = existingClientDirs
+    .flatMap((d) => listSourceFiles(join(REPO_ROOT, d)))
+    .filter((f) => f !== THIS_FILE);
   const violations = files.flatMap((f) => findViolations(toRepoPath(f), readFileSync(f, "utf8")));
   const report = violations.map((v) => `  ${v.file}: ${v.rule} (${v.pattern})`).join("\n");
   assert.equal(
     violations.length,
     0,
-    `Child-safety violations in the student client. See .claude/rules/child-safety.md.\n${report}`,
+    `Child-safety violations in client code. See .claude/rules/child-safety.md.\n${report}`,
   );
 });

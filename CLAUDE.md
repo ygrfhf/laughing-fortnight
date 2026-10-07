@@ -364,10 +364,16 @@ Steps 1–3 make the teacher demo.
 
 ---
 
-## 11. Still to decide
+## 11. Decisions and open questions
+
+### Decided
+- Default grade band for the demo: **K–2** (decided 2026-10-06). 3–5 mode is still built and
+  reachable through the dev toggle.
+
+### Still to decide
 
 - Product name.
-- Starting grade band (K–2 vs. 3–5).
+- Starting grade band for the pilot (the demo defaults to K–2; see above).
 - Starting platform for the demo (ChromeOS web vs. iPad).
 - LLM vendor.
 - Which states to launch in first (drives which laws we map in detail).
