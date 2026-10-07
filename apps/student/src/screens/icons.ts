@@ -14,7 +14,7 @@ import {
   Volleyball,
   type LucideIcon,
 } from "lucide-react";
-import type { ClassInfo, ScheduleItem, ScheduleItemKind, Subject } from "../../data/types";
+import type { ClassInfo, ScheduleItem, ScheduleItemKind, Subject } from "../data/types";
 
 export const SUBJECT_ICONS: Readonly<Record<Subject, LucideIcon>> = {
   math: Calculator,

@@ -21,9 +21,29 @@ export const STUDENTS: readonly MockStudentRecord[] = deepFreeze([
     homeroomId: "homeroom-g1",
   },
   {
+    // Classmate of "Testy": same classes, separate progress (used by the isolation contract tests).
+    student: {
+      id: "stu-k2-classmate",
+      firstName: "Sample",
+      gradeLevel: 1,
+      classIds: ["cls-g1-reading", "cls-g1-math", "cls-g1-science", "cls-g1-art"],
+    },
+    homeroomId: "homeroom-g1",
+  },
+  {
     student: {
       id: "stu-35-demo",
       firstName: "Demo",
+      gradeLevel: 4,
+      classIds: ["cls-g4-math", "cls-g4-reading", "cls-g4-social", "cls-g4-music"],
+    },
+    homeroomId: "homeroom-g4",
+  },
+  {
+    // Classmate of "Demo": same classes, separate progress.
+    student: {
+      id: "stu-35-classmate",
+      firstName: "Mock",
       gradeLevel: 4,
       classIds: ["cls-g4-math", "cls-g4-reading", "cls-g4-social", "cls-g4-music"],
     },

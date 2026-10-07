@@ -9,10 +9,25 @@
 export const en = {
   app: {
     title: "My School Day",
+    pageTitle: (screenName: string): string => `${screenName} – My School Day`,
   },
   common: {
     loading: "Loading…",
     loadError: "Something went wrong. Let's ask your teacher!",
+  },
+  nav: {
+    backToToday: "Back to Today",
+    seeWhatsNext: "See what's next",
+  },
+  assignment: {
+    aboutMinutes: (minutes: number): string => `About ${minutes} minutes`,
+    stepsHeading: "What to do",
+    markDone: "I'm done!",
+    saving: "Saving…",
+    doneHeading: "You finished it!",
+    notDoneYet: "Oops, I'm not done yet",
+    saveError: "That didn't save. Let's ask your teacher!",
+    notFound: "We couldn't find that work.",
   },
   today: {
     heading: "Today",
@@ -21,6 +36,9 @@ export const en = {
     noClassNow: "No class right now",
     withTeacher: (teacherName: string): string => `with ${teacherName}`,
     nextStepHeading: "Your next step",
+    start: "Start",
+    /** Accessible name for the Start link; must begin with `start` (WCAG 2.5.3). */
+    startLabel: (title: string): string => `Start ${title}`,
     allDone: "All done for today!",
     classFinished: (className: string): string =>
       `You finished your ${className} work! Ask your teacher what to do next.`,

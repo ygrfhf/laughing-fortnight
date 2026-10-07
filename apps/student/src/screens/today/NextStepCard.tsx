@@ -1,16 +1,17 @@
-import { Card, Icon } from "@laughing-fortnight/ui";
+import { ButtonLink, Card, Icon } from "@laughing-fortnight/ui";
 import { Footprints, Hand, PartyPopper, type LucideIcon } from "lucide-react";
 import type { ClassInfo } from "../../data/types";
 import type { NextStep } from "../../domain/next-step";
+import { routeToHash } from "../../router";
 import { en as strings } from "../../strings/en";
-import { scheduleItemIcon, SUBJECT_ICONS } from "./icons";
+import { scheduleItemIcon, SUBJECT_ICONS } from "../icons";
 
 interface NextStepCardProps {
   step: NextStep;
   classes: readonly ClassInfo[];
 }
 
-/** Shows ONE next step. The Start button arrives with the assignment view (build step 4). */
+/** Shows ONE next step, with a Start link when that step is an assignment. */
 export function NextStepCard({ step, classes }: NextStepCardProps) {
   return (
     <Card heading={strings.today.nextStepHeading} icon={Footprints} emphasis="primary">
@@ -18,6 +19,16 @@ export function NextStepCard({ step, classes }: NextStepCardProps) {
         <Icon icon={nextStepIcon(step, classes)} size="1.5em" />
         {nextStepText(step, classes)}
       </p>
+      {step.kind === "assignment" && (
+        <div className="lf-actions">
+          <ButtonLink
+            href={routeToHash({ name: "assignment", assignmentId: step.assignment.id })}
+            accessibleName={strings.today.startLabel(step.assignment.title)}
+          >
+            {strings.today.start}
+          </ButtonLink>
+        </div>
+      )}
     </Card>
   );
 }

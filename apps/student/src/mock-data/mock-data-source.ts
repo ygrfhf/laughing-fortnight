@@ -8,7 +8,9 @@ import { STUDENTS } from "./students";
 
 export const MOCK_STUDENT_IDS = {
   k2: "stu-k2-demo",
+  k2Classmate: "stu-k2-classmate",
   g35: "stu-35-demo",
+  g35Classmate: "stu-35-classmate",
 } as const;
 
 export interface MockDataSourceOptions {
@@ -70,9 +72,7 @@ export function createMockDataSource({
     },
 
     async markDone(assignmentId) {
-      if (!ownAssignments.some((a) => a.id === assignmentId)) {
-        throw new NotFoundError(`Assignment "${assignmentId}"`);
-      }
+      assertOwnAssignment(assignmentId);
       const existing = progressById.get(assignmentId);
       if (existing?.status === "done") {
         return existing;
@@ -85,5 +85,19 @@ export function createMockDataSource({
       progressById = new Map(progressById).set(assignmentId, done);
       return done;
     },
+
+    async markNotDone(assignmentId) {
+      assertOwnAssignment(assignmentId);
+      const next = new Map(progressById);
+      next.delete(assignmentId);
+      progressById = next;
+      return progressFor(assignmentId);
+    },
   };
+
+  function assertOwnAssignment(assignmentId: string): void {
+    if (!ownAssignments.some((a) => a.id === assignmentId)) {
+      throw new NotFoundError(`Assignment "${assignmentId}"`);
+    }
+  }
 }

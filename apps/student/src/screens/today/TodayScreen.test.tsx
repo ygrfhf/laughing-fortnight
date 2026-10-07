@@ -189,6 +189,12 @@ describe("TodayScreen accessibility (axe)", () => {
   });
 });
 
+describe("Start link wording", () => {
+  test("the accessible name begins with the visible text (WCAG 2.5.3 Label in Name)", () => {
+    expect(en.today.startLabel("Count to 20").startsWith(en.today.start)).toBe(true);
+  });
+});
+
 describe("progress wording", () => {
   test("is positive at every point in the day and never mentions being behind", () => {
     const messages = [0, 1, 2, 3, 4].map((done) => en.today.progressSummary(done, 4));

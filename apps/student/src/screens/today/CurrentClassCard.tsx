@@ -2,7 +2,7 @@ import { Card, Icon } from "@laughing-fortnight/ui";
 import { Clock } from "lucide-react";
 import type { ClassInfo, ScheduleItem } from "../../data/types";
 import { en as strings } from "../../strings/en";
-import { scheduleItemIcon } from "./icons";
+import { scheduleItemIcon } from "../icons";
 
 interface CurrentClassCardProps {
   /** What is happening now, or null before school, between items, or after school. */

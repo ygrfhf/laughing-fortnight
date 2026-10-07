@@ -27,6 +27,12 @@ export interface StudentDataSource {
    * Rejects with NotFoundError if the assignment is not visible to this student.
    */
   markDone(assignmentId: string): Promise<AssignmentProgress>;
+  /**
+   * Undoes markDone ("Oops, I'm not done yet"): the assignment goes back to "not_started" and
+   * completedAt is cleared. Safe to call on unfinished work. Only ever affects the signed-in
+   * student's own record. Rejects with NotFoundError if the assignment is not visible to them.
+   */
+  markNotDone(assignmentId: string): Promise<AssignmentProgress>;
 }
 
 export class NotFoundError extends Error {

@@ -6,7 +6,7 @@
  */
 :root {
   --color-bg: #f6f4ef;
-  --color-surface: #ffffff;
+  --color-surface: #ffffff; /* 6.45:1 on accent (primary button text) */
   --color-text: #1f2933; /* 13.42:1 on bg, 14.76:1 on surface, 12.71:1 on accent-soft */
   --color-text-muted: #4a5560; /* 6.92:1 on bg, 7.61:1 on surface, 6.56:1 on accent-soft */
   --color-accent: #1d5fa8; /* 5.87:1 on bg, 6.45:1 on surface, 5.56:1 on accent-soft */

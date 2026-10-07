@@ -13,7 +13,7 @@ const rawSources = import.meta.glob<string>(["./*.ts", "!./*.test.ts"], {
 });
 
 /** Adding a student or teacher means choosing an obviously fake name and listing it here. */
-const FAKE_STUDENT_FIRST_NAMES = new Set(["Testy", "Demo"]);
+const FAKE_STUDENT_FIRST_NAMES = new Set(["Testy", "Demo", "Sample", "Mock"]);
 const FAKE_TEACHER_NAMES = new Set(["Mx. Example", "Mr. Placeholder", "Ms. Sample", "Mx. Fixture"]);
 
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;

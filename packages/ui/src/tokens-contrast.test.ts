@@ -34,7 +34,9 @@ const PAIRS: readonly Pair[] = [
   { fg: "color-accent", bg: "color-bg", min: LARGE_TEXT_OR_UI, usedFor: "focus ring on the page" },
   { fg: "color-accent", bg: "color-surface", min: LARGE_TEXT_OR_UI, usedFor: "focus ring inside cards" },
   { fg: "color-accent", bg: "color-accent-soft", min: LARGE_TEXT_OR_UI, usedFor: "next-step border, focus ring" },
-  { fg: "color-success", bg: "color-surface", min: LARGE_TEXT_OR_UI, usedFor: "filled progress dot" },
+  { fg: "color-surface", bg: "color-accent", min: TEXT, usedFor: "primary button text" },
+  { fg: "color-accent", bg: "color-surface", min: TEXT, usedFor: "secondary button text" },
+  { fg: "color-success", bg: "color-surface", min: TEXT, usedFor: "'You finished it!' heading, filled progress dot" },
   { fg: "color-meter-empty", bg: "color-surface", min: LARGE_TEXT_OR_UI, usedFor: "empty progress dot outline" },
 ];
 

@@ -41,6 +41,9 @@ or change whose progress it reads or writes.
 | `status` (`not_started` / `in_progress` / `done`) | Show progress made today; pick the next step | Memory only | End of school year + district policy | The student; their teachers; their parent/guardian |
 | `completedAt` | Order completed work; let the teacher see when work was finished. Never used to rank or compare students by speed. | Memory only | End of school year + district policy | The student; their teachers; their parent/guardian |
 
+"Oops, I'm not done yet" (`markNotDone`) sets `status` back to `not_started` and deletes
+`completedAt`. No history of these changes is kept.
+
 Not a behavior score or time-on-task measure. No "late," "behind," or comparison fields.
 
 ## Class-level data shown to students (not student data)

@@ -6,15 +6,21 @@ import { createMockDataSource, MOCK_STUDENT_IDS } from "./mock-data-source";
 const TODAY = "2026-10-06";
 const FIXED_NOW = () => new Date("2026-10-06T14:30:00Z");
 
-describeStudentDataSourceContract("mock, K–2 student", () => {
-  const source = createMockDataSource({ studentId: MOCK_STUDENT_IDS.k2, today: TODAY, now: FIXED_NOW });
-  return { source, date: TODAY, foreignAssignmentId: "asg-g4-math-fractions" };
-});
+const mock = (studentId: string) => createMockDataSource({ studentId, today: TODAY, now: FIXED_NOW });
 
-describeStudentDataSourceContract("mock, 3–5 student", () => {
-  const source = createMockDataSource({ studentId: MOCK_STUDENT_IDS.g35, today: TODAY, now: FIXED_NOW });
-  return { source, date: TODAY, foreignAssignmentId: "asg-g1-math-count" };
-});
+describeStudentDataSourceContract("mock, K–2 student", () => ({
+  source: mock(MOCK_STUDENT_IDS.k2),
+  date: TODAY,
+  foreignAssignmentId: "asg-g4-math-fractions",
+  classmate: mock(MOCK_STUDENT_IDS.k2Classmate),
+}));
+
+describeStudentDataSourceContract("mock, 3–5 student", () => ({
+  source: mock(MOCK_STUDENT_IDS.g35),
+  date: TODAY,
+  foreignAssignmentId: "asg-g1-math-count",
+  classmate: mock(MOCK_STUDENT_IDS.g35Classmate),
+}));
 
 describe("mock data source", () => {
   afterEach(() => {
