@@ -204,7 +204,7 @@ describe("TodayScreen read-aloud (tap-only, on-device voices only)", () => {
     expect(speech.spoken.every((u) => u.voice === device)).toBe(true);
   });
 
-  test("the Right now card reads the class and the teacher", async () => {
+  test("the Right now card reads the class, the teacher, and the time left", async () => {
     const user = userEvent.setup();
     const speech = installFakeSpeech([onDeviceVoice()]);
     renderWithProviders(<TodayScreen />, { time: "12:45", band: "K-2" });
@@ -213,7 +213,7 @@ describe("TodayScreen read-aloud (tap-only, on-device voices only)", () => {
     await user.click(within(rightNow).getByRole("button"));
 
     expect(speech.spoken.map((u) => u.text).join(" ")).toBe(
-      `${en.today.rightNowHeading}. Art. ${en.today.withTeacher("Mr. Placeholder")}.`,
+      `${en.today.rightNowHeading}. Art. ${en.today.withTeacher("Mr. Placeholder")}. ${en.today.minutesLeft(45)}.`,
     );
   });
 
@@ -268,6 +268,58 @@ describe("TodayScreen read-aloud (tap-only, on-device voices only)", () => {
     await region(en.today.nextStepHeading);
 
     await expectNoAxeViolations(container, { includeBestPractices: true });
+  });
+});
+
+describe("TodayScreen class timer", () => {
+  test("during a class, shows a visual timer and the minutes left in the block", async () => {
+    const { container } = renderWithProviders(<TodayScreen />, { time: "09:30" });
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText(en.today.minutesLeft(45))).toBeInTheDocument();
+    expect(container.querySelector(".lf-timer")).toHaveAttribute("data-fraction-left", "0.75");
+  });
+
+  test("K–2 shows just the disc: the minutes-left sentence is there for screen readers only", async () => {
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "K-2" });
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText(en.today.minutesLeft(45))).toHaveClass("lf-visually-hidden");
+  });
+
+  test("3–5 shows the disc and the minutes-left sentence", async () => {
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "3-5" });
+
+    const rightNow = await region(en.today.rightNowHeading);
+    expect(within(rightNow).getByText(en.today.minutesLeft(45))).not.toHaveClass("lf-visually-hidden");
+  });
+
+  test("no timer during recess or outside the school day", async () => {
+    const recess = renderWithProviders(<TodayScreen />, { time: "10:20" });
+    await region(en.today.rightNowHeading);
+    expect(recess.container.querySelector(".lf-timer")).toBeNull();
+    recess.unmount();
+
+    const evening = renderWithProviders(<TodayScreen />, { time: "18:00" });
+    await region(en.today.rightNowHeading);
+    expect(evening.container.querySelector(".lf-timer")).toBeNull();
+  });
+
+  test("the last minute reads naturally", () => {
+    expect(en.today.minutesLeft(1)).toBe("1 minute left");
+    expect(en.today.minutesLeft(45)).toBe("45 minutes left");
+  });
+
+  test("read-aloud for Right now includes the time left", async () => {
+    const user = userEvent.setup();
+    const speech = installFakeSpeech([onDeviceVoice()]);
+    renderWithProviders(<TodayScreen />, { time: "09:30", band: "K-2" });
+    const rightNow = await region(en.today.rightNowHeading);
+
+    await user.click(within(rightNow).getByRole("button"));
+
+    expect(speech.spoken.map((u) => u.text)).toContain(`${en.today.minutesLeft(45)}.`);
+    removeSpeech();
   });
 });
 

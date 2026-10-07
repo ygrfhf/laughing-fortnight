@@ -76,7 +76,10 @@ describe("DevShell toolbar", () => {
     installFakeSpeech([onDeviceVoice()]);
     const { user } = renderDevApp();
     await screen.findByText(en.today.greeting("Testy"));
-    const readButtons = () => screen.queryAllByRole("button", { name: new RegExp(`^${en.readAloud.label}`) });
+    // The three Today cards (a break prompt may also be showing at 09:30 with its own button).
+    const cards = [en.today.rightNowHeading, en.today.nextStepHeading, en.today.progressHeading];
+    const readButtons = () =>
+      cards.flatMap((heading) => screen.queryAllByRole("button", { name: en.readAloud.labelFor(heading) }));
     await user.click(within(toolbar()).getByRole("radio", { name: devStrings.bandG35 }));
 
     const toggle = within(toolbar()).getByRole("checkbox", { name: devStrings.readAloudIn35 });

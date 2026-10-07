@@ -1,5 +1,13 @@
 import { describe, expect, test } from "vitest";
-import { addDays, toIsoDate, toTimeOfDay } from "./dates";
+import { addDays, timeToMinutes, toIsoDate, toTimeOfDay } from "./dates";
+
+describe("timeToMinutes", () => {
+  test("converts HH:MM to minutes since midnight", () => {
+    expect(timeToMinutes("00:00")).toBe(0);
+    expect(timeToMinutes("09:30")).toBe(570);
+    expect(timeToMinutes("23:59")).toBe(1439);
+  });
+});
 
 describe("toTimeOfDay", () => {
   test("formats local time as zero-padded 24-hour HH:MM", () => {

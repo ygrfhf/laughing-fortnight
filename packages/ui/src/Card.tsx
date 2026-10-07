@@ -10,13 +10,15 @@ interface CardProps {
   emphasis?: "normal" | "primary";
   /** Optional control shown beside the heading (e.g. a read-aloud button). */
   action?: ReactNode;
+  /** Extra class for screen-specific styling (e.g. the break prompt). */
+  className?: string;
   children: ReactNode;
 }
 
 /** A labelled region, so screen reader users can jump between cards by landmark. */
-export function Card({ heading, icon, emphasis = "normal", action, children }: CardProps) {
+export function Card({ heading, icon, emphasis = "normal", action, className: extraClass, children }: CardProps) {
   const headingId = useId();
-  const className = emphasis === "primary" ? "lf-card lf-card--primary" : "lf-card";
+  const className = ["lf-card", emphasis === "primary" && "lf-card--primary", extraClass].filter(Boolean).join(" ");
 
   return (
     <section aria-labelledby={headingId} className={className}>

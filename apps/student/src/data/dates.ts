@@ -12,6 +12,11 @@ export function toTimeOfDay(date: Date): string {
   return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
 }
 
+/** Minutes since midnight for an "HH:MM" time. */
+export function timeToMinutes(time: string): number {
+  return Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
+}
+
 /** Adds whole calendar days to a "YYYY-MM-DD" date. */
 export function addDays(isoDate: string, days: number): string {
   const match = ISO_DATE.exec(isoDate);

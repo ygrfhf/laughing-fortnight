@@ -43,6 +43,21 @@ describe("shared stylesheets", () => {
     expect(Number(size?.[1])).toBeGreaterThanOrEqual(64);
   });
 
+  test("provide a visually-hidden utility that keeps text available to screen readers", () => {
+    const block = allCss.match(/\.lf-visually-hidden\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(block).toMatch(/position:\s*absolute/);
+    expect(block).toMatch(/clip-path:\s*inset\(50%\)/);
+    expect(block).not.toMatch(/display:\s*none|visibility:\s*hidden/);
+  });
+
+  test("icon-only buttons stay square at the touch-target size", () => {
+    const iconBlock = allCss.match(/\.lf-button--icon\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(iconBlock).toMatch(/width:\s*var\(--touch-target-min\)/);
+    expect(iconBlock).toMatch(/height:\s*var\(--touch-target-min\)/);
+  });
+
   test("define a minimum touch target size token of at least 48px", () => {
     const match = allCss.match(/--touch-target-min:\s*(\d+)px/);
     expect(Number(match?.[1])).toBeGreaterThanOrEqual(48);

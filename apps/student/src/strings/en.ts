@@ -15,6 +15,11 @@ export const en = {
     loading: "Loading…",
     loadError: "Something went wrong. Let's ask your teacher!",
   },
+  breaks: {
+    heading: "Time for a stretch break!",
+    body: "Stand up, stretch, and take three slow breaths.",
+    dismiss: "Got it",
+  },
   readAloud: {
     label: "Read to me",
     stop: "Stop reading",
@@ -42,6 +47,7 @@ export const en = {
     rightNowHeading: "Right now",
     noClassNow: "No class right now",
     withTeacher: (teacherName: string): string => `with ${teacherName}`,
+    minutesLeft: (minutes: number): string => (minutes === 1 ? "1 minute left" : `${minutes} minutes left`),
     nextStepHeading: "Your next step",
     /** 3–5 only: extra detail under the next step's title. */
     stepDetails: (className: string, minutes: number): string => `${className}, about ${minutes} minutes`,

@@ -120,13 +120,46 @@ describe("ReadAloudButton speaking", () => {
 });
 
 describe("ReadAloudButton accessibility", () => {
-  test("the accessible name starts with the visible text and has no axe violations", async () => {
+  test("is an icon-only button with the full accessible name, sized by the touch-target token", async () => {
     installFakeSpeech([onDeviceVoice()]);
     const { container } = renderButton();
 
-    const button = screen.getByRole("button");
-    expect(button).toHaveTextContent(LABELS.label);
-    expect(button.getAttribute("aria-label")?.startsWith(LABELS.label)).toBe(true);
+    const button = screen.getByRole("button", { name: "Read to me: Your next step" });
+    expect(button).toHaveTextContent(/^$/);
+    expect(button).toHaveClass("lf-button", "lf-button--icon");
+    expect(button.querySelector("svg.lucide-volume-2")).not.toBeNull();
     await expectNoAxeViolations(container);
+  });
+
+  test("while reading, the name becomes 'Stop reading' and the icon visibly changes", async () => {
+    const user = userEvent.setup();
+    installFakeSpeech([onDeviceVoice()]);
+    const { container } = renderButton();
+
+    await user.click(screen.getByRole("button"));
+
+    const stop = screen.getByRole("button", { name: LABELS.stopLabel });
+    expect(stop.querySelector("svg.lucide-volume-2")).toBeNull();
+    expect(stop.querySelector("svg.lucide-square")).not.toBeNull();
+    await expectNoAxeViolations(container);
+  });
+
+  test("uses the plain label as the name when no fuller name is given", () => {
+    installFakeSpeech([onDeviceVoice()]);
+    render(<ReadAloudButton text="Hi." {...LABELS} />);
+
+    expect(screen.getByRole("button", { name: LABELS.label })).toBeInTheDocument();
+  });
+
+  test("keeps keyboard focus on the same button when it toggles to Stop", async () => {
+    const user = userEvent.setup();
+    installFakeSpeech([onDeviceVoice()]);
+    renderButton();
+    const button = screen.getByRole("button");
+    button.focus();
+
+    await user.keyboard("{Enter}");
+
+    expect(screen.getByRole("button", { name: LABELS.stopLabel })).toHaveFocus();
   });
 });
